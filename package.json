@@ -1,0 +1,22 @@
+{
+  "name": "book-it",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "package": "yarn run package:prepare && cp chrome/headless_shell.tar.gz tmp && cd tmp && zip -rq ../package.zip . && rm -rf ../tmp",
+    "package:prepare": "yarn run lint && mkdir tmp && cp -r src/** tmp && cp -r package.json tmp && cd tmp && PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1 yarn install --production",
+    "lint": "./node_modules/.bin/eslint src"
+  },
+  "dependencies": {
+    "moment": "^2.22.2",
+    "puppeteer": "^1.1.1",
+    "tar": "^4.0.1"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.111.0",
+    "eslint": "^4.6.1",
+    "serverless-hooks-plugin": "^1.1.0",
+    "serverless-offline": "^3.25.17",
+    "serverless-offline-scheduler": "^0.3.4"
+  }
+}

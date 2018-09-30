@@ -1,0 +1,43 @@
+service: resy-lambda
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - lambda:InvokeFunction
+      Resource: '*'
+  memorySize: 1536
+  timeout: 180
+
+functions:
+  reserve:
+    handler: src/handler.reserve
+  # cron_reservations:
+  #   handler: src/handler.cron_reservations
+  #   events:
+  #     - schedule: rate(1 minute)
+  get_venues:
+    handler: src/handler.get_venues
+
+# package:
+#   artifact: ./package.zip
+package:
+  exclude:
+    - chrome/**
+    - node_modules/**
+    - package.zip
+    - .serverless/**
+
+plugins:
+  # - serverless-hooks-plugin
+  - serverless-offline-scheduler
+  - serverless-offline
+
+# custom:
+#   hooks:
+#     package:initialize:
+#       - yarn run package
