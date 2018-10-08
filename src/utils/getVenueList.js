@@ -2,7 +2,6 @@ const { RESY_URL } = require('../const');
 
 module.exports = async browser => {
   const url = `${RESY_URL}/list-venues`;
-  const response = {};
   const page = await browser.newPage();
 
   try {
@@ -21,12 +20,9 @@ module.exports = async browser => {
     console.log(e);
     await browser.close();
 
-    response[url] = {
+    return {
       type: 'error',
       message: e
     };
   }
-
-  await browser.close();
-  return response;
 };

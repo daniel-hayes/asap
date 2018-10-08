@@ -1,10 +1,10 @@
-const aws = require('aws-sdk');
+// const AWS = require('aws-sdk');
 const { getBrowser } = require('./chrome-config/setup');
-const { bookReservation, getVenueList } = require('./utils');
+const { bookReservation, getVenueList, saveVenuesToDB } = require('./utils');
 
-const lambda = new aws.Lambda({
-  region: 'us-east-1'
-});
+// const lambda = new AWS.Lambda({
+//   region: 'us-east-1'
+// });
 
 module.exports.reserve = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false;
@@ -30,10 +30,12 @@ module.exports.get_venues = async (event, context) => {
 
   try {
     const browser = await getBrowser();
-    const result = await getVenueList(browser);
+    const results = await getVenueList(browser);
+    const stuff = await saveVenuesToDB(results);
+    console.log(stuff, 'stuff');
     return {
       statusCode: 200,
-      body: JSON.stringify(result)
+      body: JSON.stringify(results)
     };
   } catch (err) {
     console.error(err.stack);

@@ -4,12 +4,23 @@ provider:
   name: aws
   runtime: nodejs8.10
   stage: dev
+  environment:
+    DYNAMODB_TABLE: resy-venues
   region: us-east-1
   iamRoleStatements:
     - Effect: Allow
       Action:
         - lambda:InvokeFunction
       Resource: '*'
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}'
   memorySize: 1536
   timeout: 180
 
@@ -23,14 +34,14 @@ functions:
   get_venues:
     handler: src/handler.get_venues
 
-# package:
-#   artifact: ./package.zip
 package:
-  exclude:
-    - chrome/**
-    - node_modules/**
-    - package.zip
-    - .serverless/**
+  artifact: ./package.zip
+# package:
+#   exclude:
+#     - chrome/**
+#     - node_modules/**
+#     - package.zip
+#     - .serverless/**
 
 plugins:
   # - serverless-hooks-plugin

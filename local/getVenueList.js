@@ -1,4 +1,4 @@
-const { getVenueList } = require('../src/utils');
+const { getVenueList, saveVenuesToDB } = require('../src/utils');
 const config = require('../src/chrome-config/config');
 const puppeteer = require('puppeteer');
 
@@ -11,8 +11,10 @@ const puppeteer = require('puppeteer');
   });
 
   try {
-    const result = await getVenueList(browser);
-    console.log(result);
+    const results = await getVenueList(browser);
+    await saveVenuesToDB(results);
+
+    // console.log(results);
   } catch (err) {
     console.error(err);
     await browser.close();

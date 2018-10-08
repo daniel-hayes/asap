@@ -1,4 +1,5 @@
 module.exports = {
   bookReservation: require('./bookReservation'),
-  getVenueList: require('./getVenueList')
+  getVenueList: require('./getVenueList'),
+  saveVenuesToDB: require('./saveVenuesToDB')
 };
