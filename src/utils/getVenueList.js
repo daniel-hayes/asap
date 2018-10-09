@@ -11,11 +11,14 @@ module.exports = async browser => {
       timeout: 10000
     });
 
-    return await page.evaluate(() =>
+    const results = await page.evaluate(() =>
       [...document.querySelectorAll('[ng-repeat="venue in PageCtrl.venues"] a')].map(venue => ({
         [venue.innerHTML]: venue.getAttribute('href')
       }))
     );
+
+    await browser.close();
+    return results;
   } catch (e) {
     console.log(e);
     await browser.close();

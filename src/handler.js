@@ -1,5 +1,5 @@
 // const AWS = require('aws-sdk');
-const { getBrowser } = require('./chrome-config/setup');
+const { getBrowser } = require('./setup');
 const { bookReservation, getVenueList, saveVenuesToDB } = require('./utils');
 
 // const lambda = new AWS.Lambda({
@@ -32,6 +32,7 @@ module.exports.get_venues = async (event, context) => {
     const browser = await getBrowser();
     const results = await getVenueList(browser);
     const stuff = await saveVenuesToDB(results);
+
     console.log(stuff, 'stuff');
     return {
       statusCode: 200,

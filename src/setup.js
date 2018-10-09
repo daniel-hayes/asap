@@ -5,22 +5,34 @@ const fs = require('fs');
 const tar = require('tar');
 const puppeteer = require('puppeteer');
 
-// const isLocal = process.env.IS_LOCAL;
 const localChromePath = path.join('headless_shell.tar.gz');
 // const remoteChromeS3Bucket = process.env.CHROME_BUCKET;
 // const remoteChromeS3Key = process.env.CHROME_KEY || 'headless_shell.tar.gz';
 const setupChromePath = path.join(path.sep, 'tmp');
 const executablePath = path.join(setupChromePath, 'headless_shell');
-const DEBUG = process.env.DEBUG;
+const { DEBUG, IS_LOCAL } = process.env;
 
 exports.getBrowser = (() => {
+  // local arguments
+  let puppeteerArgs = {
+    headless: false
+  };
   let browser;
+
   return async () => {
     if (typeof browser === 'undefined' || !(await isBrowserAvailable(browser))) {
-      await setupChrome();
+      if (!IS_LOCAL) {
+        // production arguments
+        puppeteerArgs = {
+          headless: true,
+          executablePath
+        };
+
+        await setupChrome();
+      }
+
       browser = await puppeteer.launch({
-        headless: true,
-        executablePath,
+        ...puppeteerArgs,
         args: [
           // error when launch(); No usable sandbox! Update your kernel
           '--no-sandbox',
