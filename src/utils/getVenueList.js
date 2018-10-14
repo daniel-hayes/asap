@@ -12,9 +12,19 @@ module.exports = async browser => {
     });
 
     const results = await page.evaluate(() =>
-      [...document.querySelectorAll('[ng-repeat="venue in PageCtrl.venues"] a')].map(venue => ({
-        [venue.innerHTML]: venue.getAttribute('href')
-      }))
+      [...document.querySelectorAll('[ng-repeat="venue in PageCtrl.venues"] a')].map(
+        (venue, id) => {
+          // regex to extract city from url
+          const getCity = new RegExp(/\/(.*)\//);
+          const url = venue.getAttribute('href');
+          return {
+            id: id.toString(),
+            venue: venue.innerHTML,
+            city: getCity.exec(url)[1],
+            url
+          };
+        }
+      )
     );
 
     await browser.close();

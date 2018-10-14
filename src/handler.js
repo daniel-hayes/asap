@@ -2,10 +2,6 @@
 const { getBrowser } = require('./setup');
 const { bookReservation, getVenueList, saveVenuesToDB } = require('./utils');
 
-// const lambda = new AWS.Lambda({
-//   region: 'us-east-1'
-// });
-
 module.exports.reserve = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
@@ -31,12 +27,11 @@ module.exports.get_venues = async (event, context) => {
   try {
     const browser = await getBrowser();
     const results = await getVenueList(browser);
-    const stuff = await saveVenuesToDB(results);
+    await saveVenuesToDB(results);
 
-    console.log(stuff, 'stuff');
     return {
       statusCode: 200,
-      body: JSON.stringify(results)
+      body: 'Save complete'
     };
   } catch (err) {
     console.error(err.stack);
