@@ -1,11 +1,8 @@
 const moment = require('moment');
 const { RESY_URL, WIDGET_URL } = require('../const');
 
-module.exports = async (
-  browser,
-  reservation = { venue: 'cities/ny/llama-inn', seats: 2, date: '2018-10-01T00:00:00.000Z' }
-) => {
-  const { venue, seats, date } = reservation;
+module.exports = async (browser, reservation) => {
+  const { venue, seats, date } = reservation.body;
   const url = `${RESY_URL}/${venue}`;
   const PARAMS = {
     seats,

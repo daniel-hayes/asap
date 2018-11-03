@@ -2,7 +2,6 @@ const { RESY_URL } = require('../const');
 
 module.exports = async browser => {
   const url = `${RESY_URL}/list-venues`;
-  const response = {};
   const page = await browser.newPage();
 
   try {
@@ -12,21 +11,31 @@ module.exports = async browser => {
       timeout: 10000
     });
 
-    return await page.evaluate(() =>
-      [...document.querySelectorAll('[ng-repeat="venue in PageCtrl.venues"] a')].map(venue => ({
-        [venue.innerHTML]: venue.getAttribute('href')
-      }))
+    const results = await page.evaluate(() =>
+      [...document.querySelectorAll('[ng-repeat="venue in PageCtrl.venues"] a')].map(
+        (venue, id) => {
+          // regex to extract city from url
+          const getCity = new RegExp(/\/(.*)\//);
+          const url = venue.getAttribute('href');
+          return {
+            id: id.toString(),
+            venue: venue.innerHTML,
+            city: getCity.exec(url)[1],
+            url
+          };
+        }
+      )
     );
+
+    await browser.close();
+    return results;
   } catch (e) {
     console.log(e);
     await browser.close();
 
-    response[url] = {
+    return {
       type: 'error',
       message: e
     };
   }
-
-  await browser.close();
-  return response;
 };
