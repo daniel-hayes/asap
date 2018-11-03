@@ -183,7 +183,14 @@ class App extends React.Component {
                 )}
               </Dropdown>
               people on
-              <DatePickerWrapper />
+              <DatePickerWrapper
+                defaultDate={moment().add(1, 'month')}
+                DateInput={({ onClick, hasValue, value }) => (
+                  <button onClick={onClick} className={`input ${hasValue ? 'has-value' : ''}`}>
+                    {moment(value).format('MMMM Do')}
+                  </button>
+                )}
+              />
             </div>
             <button className="book-it" type="submit">
               Book It

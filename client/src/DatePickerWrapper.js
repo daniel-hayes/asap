@@ -1,20 +1,15 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
-import moment from 'moment';
-
-const DateInput = ({ onClick, hasValue, value }) => {
-  return (
-    <button onClick={onClick} className={`input ${hasValue ? 'has-value' : ''}`}>
-      {moment(value).format('MMMM Do')}
-    </button>
-  );
-};
 
 class DatePickerWrapper extends React.Component {
   state = {
-    date: moment().add(1, 'month'),
+    date: '',
     selectedDate: ''
   };
+
+  componentDidMount() {
+    this.setState({ date: this.props.defaultDate });
+  }
 
   handleChange = date => {
     this.setState({
@@ -25,6 +20,7 @@ class DatePickerWrapper extends React.Component {
 
   render() {
     const { date, selectedDate } = this.state;
+    const { DateInput } = this.props;
     return (
       <div className="DatePickerWrapper">
         <DatePicker
