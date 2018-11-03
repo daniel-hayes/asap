@@ -169,43 +169,12 @@ class App extends React.Component {
           <form className="App-form" onSubmit={this.handleAuthenticatedSubmit}>
             <div>
               I want a reservation at
-              {/* <button className="input">Lilia</button> */}
-              {/* <input
-                  className="input"
-                  placeholder="Lilia"
-                /> */}
-              <AutoComplete restaurantList={restaurantList} />
+              <AutoComplete searchKey="venue" placeholder="Lilia" searchItems={restaurantList} />
               for
-              {/* // make this a render prop for on click? */}
-              {/* <select className="input"> */}
-              {/* <option selected disabled>
-                  2
-                </option> */}
-              {/* {Array(20)
-                  .fill()
-                  .map((v, i) => (
-                    <li key={i}>{i + 1}</li>
-                  ))}
-              </select> */}
               <Dropdown />
               people on
               <DatePickerWrapper />
             </div>
-            {/* <InputWrapper label="Venue" id="restaurant">
-              <AutoComplete restaurantList={restaurantList} />
-            </InputWrapper>
-            <InputWrapper label="Guests" id="guests">
-              <select>
-                {Array(20)
-                  .fill()
-                  .map((v, i) => (
-                    <option key={i}>{i + 1}</option>
-                  ))}
-              </select>
-            </InputWrapper>
-            <InputWrapper label="Date">
-              <DatePicker selected={this.state.date} onChange={this.handleChange} />
-            </InputWrapper> */}
             <button className="book-it" type="submit">
               Book It
             </button>

@@ -6,29 +6,29 @@ class AutoComplete extends React.Component {
   state = {
     autoComplete: [],
     inputValue: '',
-    selectedVenue: {},
+    selected: {},
     width: DEFAULT_INPUT_WIDTH
   };
 
   handleChange = e => {
-    const { restaurantList } = this.props;
+    const { searchItems, searchKey } = this.props;
     const inputValue = e.currentTarget.value;
     const hasInputValue = inputValue.length > 0;
 
     const autoComplete = hasInputValue
-      ? restaurantList
+      ? searchItems
           .slice(0, 10)
-          .filter(({ venue }) => venue.toLowerCase().indexOf(inputValue.toLowerCase()) === 0)
+          .filter(item => item[searchKey].toLowerCase().indexOf(inputValue.toLowerCase()) === 0)
       : [];
 
     // poplate selected value if string is a match and they do not click
-    if (autoComplete.length === 1 && inputValue.length === autoComplete[0].venue.length) {
-      const possibleVenue = autoComplete[0];
+    if (autoComplete.length === 1 && inputValue.length === autoComplete[0][searchKey].length) {
+      const possibleMatch = autoComplete[0];
 
       this.setState(
         {
-          inputValue: possibleVenue.venue,
-          selectedVenue: possibleVenue
+          inputValue: possibleMatch[searchKey],
+          selected: possibleMatch
         },
         this.setWidth
       );
@@ -37,7 +37,7 @@ class AutoComplete extends React.Component {
         {
           inputValue,
           autoComplete,
-          selectedVenue: {}
+          selected: {}
         },
         this.setWidth
       );
@@ -45,14 +45,15 @@ class AutoComplete extends React.Component {
   };
 
   handleClick = e => {
+    const { searchKey } = this.props;
     const index = e.currentTarget.value;
     const selection = this.state.autoComplete[index];
 
     if (selection) {
       this.setState(
         {
-          inputValue: selection.venue,
-          selectedVenue: selection
+          inputValue: selection[searchKey],
+          selected: selection
         },
         this.setWidth
       );
@@ -67,18 +68,16 @@ class AutoComplete extends React.Component {
   };
 
   render() {
-    const { autoComplete, selectedVenue, inputValue, width } = this.state;
-    const { id } = this.props;
+    const { autoComplete, selected, inputValue, width } = this.state;
+    const { placeholder, searchKey } = this.props;
 
     return (
       <div className="AutoComplete">
         <input
-          placeholder="Lilia"
-          className={`input ${selectedVenue.venue ? 'has-value' : ''}`}
+          placeholder={placeholder}
+          className={`input ${selected[searchKey] ? 'has-value' : ''}`}
           autoComplete="off"
           onChange={this.handleChange}
-          name={id}
-          id={id}
           style={{ width }}
           value={inputValue}
         />
@@ -86,18 +85,18 @@ class AutoComplete extends React.Component {
         <span id="hiddenText">{inputValue}</span>
 
         {autoComplete.length > 0 &&
-          !selectedVenue.venue && (
-            // flip these class names
+          !selected[searchKey] && (
+            // @TODO flip these class names
             <div className="AutoComplete-list">
               <ul className="AutoComplete-list_wrapper">
-                {autoComplete.map(({ venue }, key) => (
+                {autoComplete.map((item, key) => (
                   <li
                     className="AutoComplete-list_item"
                     key={key}
                     value={key}
                     onClick={this.handleClick}
                   >
-                    {venue}
+                    {item[searchKey]}
                   </li>
                 ))}
               </ul>
