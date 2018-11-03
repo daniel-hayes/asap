@@ -2,9 +2,8 @@ import React from 'react';
 
 class Dropdown extends React.Component {
   state = {
-    defaultValue: 2,
     showDropdown: false,
-    buttonValue: ''
+    selection: ''
   };
 
   toggleDropdown() {
@@ -17,29 +16,26 @@ class Dropdown extends React.Component {
 
   handleItemSelect = e => {
     this.setState({
-      buttonValue: e.currentTarget.innerHTML,
+      selection: e.currentTarget.innerHTML,
       showDropdown: this.toggleDropdown()
     });
   };
 
   render() {
-    const { buttonValue, defaultValue, showDropdown } = this.state;
+    const { selection, showDropdown } = this.state;
+    const { children, items } = this.props;
 
     return (
       <div className="Dropdown">
-        <button onClick={this.handleClick} className={`input ${buttonValue ? 'has-value' : ''}`}>
-          {buttonValue || defaultValue}
-        </button>
+        {children({ handleClick: this.handleClick, selection })}
         {showDropdown && (
           <div className="Dropdown-list_wrapper">
             <ul className="Dropdown-list">
-              {Array(20)
-                .fill()
-                .map((v, i) => (
-                  <li onClick={this.handleItemSelect} className="Dropdown-list_item" key={i}>
-                    {i + 1}
-                  </li>
-                ))}
+              {items.map((itemValue, i) => (
+                <li onClick={this.handleItemSelect} className="Dropdown-list_item" key={i}>
+                  {itemValue}
+                </li>
+              ))}
             </ul>
           </div>
         )}

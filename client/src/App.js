@@ -171,7 +171,17 @@ class App extends React.Component {
               I want a reservation at
               <AutoComplete searchKey="venue" placeholder="Lilia" searchItems={restaurantList} />
               for
-              <Dropdown />
+              <Dropdown
+                items={Array(20)
+                  .fill()
+                  .map((v, i) => i + 1)}
+              >
+                {({ handleClick, selection }) => (
+                  <button onClick={handleClick} className={`input ${selection ? 'has-value' : ''}`}>
+                    {selection || 2}
+                  </button>
+                )}
+              </Dropdown>
               people on
               <DatePickerWrapper />
             </div>
