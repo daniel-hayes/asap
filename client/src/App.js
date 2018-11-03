@@ -7,21 +7,26 @@ import Dropdown from './Dropdown';
 import DatePickerWrapper from './DatePickerWrapper';
 import './App.css';
 
-const InputWrapper = ({ children, id, label }) => (
-  <div>
-    <label className="label" htmlFor={id}>
-      {label}
-    </label>
-    {React.cloneElement(children, { id, name: id })}
-  </div>
-);
+// const InputWrapper = ({ children, id, label }) => (
+//   <div>
+//     <label className="label" htmlFor={id}>
+//       {label}
+//     </label>
+//     {React.cloneElement(children, { id, name: id })}
+//   </div>
+// );
 
 class App extends React.Component {
   state = {
     isAuthenticated: false,
     date: moment(),
     restaurantList: [],
-    restaurantSelection: {}
+    restaurantSelection: {},
+    formInputs: {
+      autoComplete: '',
+      dropdown: '',
+      datePicker: ''
+    }
   };
 
   async componentDidMount() {
@@ -89,6 +94,12 @@ class App extends React.Component {
     this.setState({
       isAuthenticated,
       restaurantList: MOCK_RES_LIST
+    });
+  }
+
+  updateFormState(input, updatedState) {
+    this.setState({
+      formInputs: Object.assign({}, this.state.formInputs, { [input]: updatedState })
     });
   }
 
@@ -161,7 +172,10 @@ class App extends React.Component {
   };
 
   render() {
-    const { isAuthenticated, isLoading, restaurantList } = this.state;
+    const { formInputs, isAuthenticated, isLoading, restaurantList } = this.state;
+    const formIsReady = Object.keys(formInputs).every(input => formInputs[input]);
+
+    console.log(formIsReady);
 
     return (
       <div className="App">
@@ -169,12 +183,23 @@ class App extends React.Component {
           <form className="App-form" onSubmit={this.handleAuthenticatedSubmit}>
             <div>
               I want a reservation at
-              <AutoComplete searchKey="venue" placeholder="Lilia" searchItems={restaurantList} />
+              <AutoComplete
+                inputClassName="input"
+                searchKey="venue"
+                placeholder="Lilia"
+                searchItems={restaurantList}
+                stateCallback={updatedState => {
+                  this.updateFormState('autoComplete', updatedState);
+                }}
+              />
               for
               <Dropdown
                 items={Array(20)
                   .fill()
                   .map((v, i) => i + 1)}
+                stateCallback={updatedState => {
+                  this.updateFormState('dropdown', updatedState);
+                }}
               >
                 {({ handleClick, selection }) => (
                   <button onClick={handleClick} className={`input ${selection ? 'has-value' : ''}`}>
@@ -190,9 +215,12 @@ class App extends React.Component {
                     {moment(value).format('MMMM Do')}
                   </button>
                 )}
+                stateCallback={updatedState => {
+                  this.updateFormState('datePicker', updatedState);
+                }}
               />
             </div>
-            <button className="book-it" type="submit">
+            <button className={`book-it ${formIsReady ? 'ready' : ''}`} type="submit">
               Book It
             </button>
           </form>
@@ -211,7 +239,7 @@ class App extends React.Component {
                 <option key={key}>{provider}</option>
               ))} */}
             </select>
-            <button className="book-it" type="submit">
+            <button className={`book-it ${formIsReady ? 'ready' : ''}`} type="submit">
               Submit
             </button>
           </form>

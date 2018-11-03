@@ -11,7 +11,7 @@ class AutoComplete extends React.Component {
   };
 
   handleChange = e => {
-    const { searchItems, searchKey } = this.props;
+    const { searchItems, searchKey, stateCallback } = this.props;
     const inputValue = e.currentTarget.value;
     const hasInputValue = inputValue.length > 0;
 
@@ -30,7 +30,12 @@ class AutoComplete extends React.Component {
           inputValue: possibleMatch[searchKey],
           selected: possibleMatch
         },
-        this.setWidth
+        () => {
+          this.setWidth();
+          if (stateCallback) {
+            stateCallback(possibleMatch[searchKey]);
+          }
+        }
       );
     } else {
       this.setState(
@@ -39,13 +44,18 @@ class AutoComplete extends React.Component {
           autoComplete,
           selected: {}
         },
-        this.setWidth
+        () => {
+          this.setWidth();
+          if (stateCallback) {
+            stateCallback('');
+          }
+        }
       );
     }
   };
 
   handleClick = e => {
-    const { searchKey } = this.props;
+    const { searchKey, stateCallback } = this.props;
     const index = e.currentTarget.value;
     const selection = this.state.autoComplete[index];
 
@@ -55,7 +65,12 @@ class AutoComplete extends React.Component {
           inputValue: selection[searchKey],
           selected: selection
         },
-        this.setWidth
+        () => {
+          this.setWidth();
+          if (stateCallback) {
+            stateCallback(selection[searchKey]);
+          }
+        }
       );
     }
   };
@@ -69,13 +84,13 @@ class AutoComplete extends React.Component {
 
   render() {
     const { autoComplete, selected, inputValue, width } = this.state;
-    const { placeholder, searchKey } = this.props;
+    const { inputClassName, placeholder, searchKey } = this.props;
 
     return (
       <div className="AutoComplete">
         <input
           placeholder={placeholder}
-          className={`input ${selected[searchKey] ? 'has-value' : ''}`}
+          className={`${inputClassName} ${selected[searchKey] ? 'has-value' : ''}`}
           autoComplete="off"
           onChange={this.handleChange}
           style={{ width }}

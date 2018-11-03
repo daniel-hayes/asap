@@ -12,10 +12,19 @@ class DatePickerWrapper extends React.Component {
   }
 
   handleChange = date => {
-    this.setState({
-      date,
-      selectedDate: date
-    });
+    const { stateCallback } = this.props;
+
+    this.setState(
+      {
+        date,
+        selectedDate: date
+      },
+      () => {
+        if (stateCallback) {
+          stateCallback(date);
+        }
+      }
+    );
   };
 
   render() {

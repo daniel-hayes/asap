@@ -15,10 +15,20 @@ class Dropdown extends React.Component {
   };
 
   handleItemSelect = e => {
-    this.setState({
-      selection: e.currentTarget.innerHTML,
-      showDropdown: this.toggleDropdown()
-    });
+    const { stateCallback } = this.props;
+    const selection = e.currentTarget.innerHTML;
+
+    this.setState(
+      {
+        selection,
+        showDropdown: this.toggleDropdown()
+      },
+      () => {
+        if (stateCallback) {
+          stateCallback(selection);
+        }
+      }
+    );
   };
 
   render() {
