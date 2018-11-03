@@ -1,4 +1,3 @@
-// const AWS = require('aws-sdk');
 const { getBrowser } = require('./setup');
 const { bookReservation, getVenueList, saveVenuesToDB } = require('./utils');
 
@@ -7,7 +6,7 @@ module.exports.reserve = async (event, context) => {
 
   try {
     const browser = await getBrowser();
-    const result = await bookReservation(browser);
+    const result = await bookReservation(browser, event);
     return {
       statusCode: 200,
       body: JSON.stringify(result)

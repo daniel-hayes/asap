@@ -27,6 +27,10 @@ provider:
 functions:
   reserve:
     handler: src/handler.reserve
+    events:
+      - http:
+          path: reserve
+          method: post
   # cron_reservations:
   #   handler: src/handler.cron_reservations
   #   events:
