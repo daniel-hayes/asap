@@ -31,24 +31,30 @@ functions:
       - http:
           path: reserve
           method: post
+
   # cron_reservations:
   #   handler: src/handler.cron_reservations
   #   events:
   #     - schedule: rate(1 minute)
-  get_venues:
-    handler: src/handler.get_venues
+  find_venues:
+    handler: src/handler.find_venues
 
-package:
-  artifact: ./package.zip
+  fetch_venues:
+    handler: src/handler.fetch_venues
+
 # package:
-#   exclude:
-#     - chrome/**
-#     - node_modules/**
-#     - package.zip
-#     - .serverless/**
+#   artifact: ./package.zip
+package:
+  exclude:
+    - chrome/**
+    - node_modules/**
+    - package.zip
+    - .serverless/**
+    - client/**
 
 plugins:
   # - serverless-hooks-plugin
+  - serverless-plugin-include-dependencies
   - serverless-offline-scheduler
   - serverless-offline
 
