@@ -17,8 +17,8 @@ class AutoComplete extends React.Component {
 
     const autoComplete = hasInputValue
       ? searchItems
-          .slice(0, 10)
           .filter(item => item[searchKey].toLowerCase().indexOf(inputValue.toLowerCase()) === 0)
+          .slice(0, 10)
       : [];
 
     // poplate selected value if string is a match and they do not click

@@ -159,6 +159,11 @@
   display: inline-block;
 }
 
+/* modifiers */
+.no-padding--right {
+  padding-right: 0;
+}
+
 /* override react calendar styles */
 .react-datepicker {
   font-family: inherit;

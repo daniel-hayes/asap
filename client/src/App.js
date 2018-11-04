@@ -2,26 +2,17 @@ import React from 'react';
 import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
 // import phoneProviders from './constants/phoneProviders';
+import { API_ENDPOINT } from './config.js';
 import AutoComplete from './AutoComplete';
 import Dropdown from './Dropdown';
 import DatePickerWrapper from './DatePickerWrapper';
 import './App.css';
 
-// const InputWrapper = ({ children, id, label }) => (
-//   <div>
-//     <label className="label" htmlFor={id}>
-//       {label}
-//     </label>
-//     {React.cloneElement(children, { id, name: id })}
-//   </div>
-// );
-
 class App extends React.Component {
   state = {
     isAuthenticated: false,
     date: moment(),
-    restaurantList: [],
-    restaurantSelection: {},
+    venueList: [],
     formInputs: {
       autoComplete: '',
       dropdown: '',
@@ -30,72 +21,35 @@ class App extends React.Component {
   };
 
   async componentDidMount() {
-    const validate = await fetch(`/validate${window.location.search}`);
+    // const validate = await fetch(`/validate${window.location.search}`);
     // const isAuthenticated = await validate.json();
     const isAuthenticated = true;
 
-    const MOCK_RES_LIST = [
-      {
-        id: '123',
-        venue: 'Lilia',
-        city: 'ny',
-        url: 'google.com'
-      },
-      {
-        id: '345',
-        venue: 'Llama Inn',
-        city: 'ny',
-        url: 'google.com'
-      },
-      {
-        id: '345',
-        venue: 'Llama Inn Is a super long name',
-        city: 'ny',
-        url: 'google.com'
-      },
-      {
-        id: '345',
-        venue: 'Llama Inn',
-        city: 'ny',
-        url: 'google.com'
-      },
-      {
-        id: '345',
-        venue: 'Llama Inn',
-        city: 'ny',
-        url: 'google.com'
-      },
-      {
-        id: '345',
-        venue: 'Llama Inn',
-        city: 'ny',
-        url: 'google.com'
-      },
-      {
-        id: '345',
-        venue: 'Llama Inn',
-        city: 'ny',
-        url: 'google.com'
-      },
-      {
-        id: '345',
-        venue: 'Llama Inn',
-        city: 'ny',
-        url: 'google.com'
-      },
-      {
-        id: '345',
-        venue: 'Llama Inn',
-        city: 'ny',
-        url: 'google.com'
-      }
-    ];
+    const venueList = await this.fetchVenueList('venues');
 
     this.setState({
       isAuthenticated,
-      restaurantList: MOCK_RES_LIST
+      venueList: venueList
     });
   }
+
+  fetchVenueList = async key => {
+    const response = localStorage.getItem(key);
+
+    if (response) {
+      return JSON.parse(response);
+    }
+
+    const data = await fetch(`${API_ENDPOINT}/fetch_venues`);
+    const jsonData = await data.json();
+    const venues = jsonData.Items;
+
+    if (jsonData && venues && venues.length) {
+      localStorage.setItem(key, JSON.stringify(venues));
+    }
+
+    return venues;
+  };
 
   updateFormState(input, updatedState) {
     this.setState({
@@ -172,10 +126,8 @@ class App extends React.Component {
   };
 
   render() {
-    const { formInputs, isAuthenticated, isLoading, restaurantList } = this.state;
+    const { formInputs, isAuthenticated, isLoading, venueList } = this.state;
     const formIsReady = Object.keys(formInputs).every(input => formInputs[input]);
-
-    console.log(formIsReady);
 
     return (
       <div className="App">
@@ -184,15 +136,15 @@ class App extends React.Component {
             <div>
               I want a reservation at
               <AutoComplete
-                inputClassName="input"
+                inputClassName="input no-padding--right"
                 searchKey="venue"
                 placeholder="Lilia"
-                searchItems={restaurantList}
+                searchItems={venueList}
                 stateCallback={updatedState => {
                   this.updateFormState('autoComplete', updatedState);
                 }}
               />
-              for
+              , for
               <Dropdown
                 items={Array(20)
                   .fill()
@@ -207,11 +159,14 @@ class App extends React.Component {
                   </button>
                 )}
               </Dropdown>
-              people on
+              people, on
               <DatePickerWrapper
                 defaultDate={moment().add(1, 'month')}
                 DateInput={({ onClick, hasValue, value }) => (
-                  <button onClick={onClick} className={`input ${hasValue ? 'has-value' : ''}`}>
+                  <button
+                    onClick={onClick}
+                    className={`input no-padding--right ${hasValue ? 'has-value' : ''}`}
+                  >
                     {moment(value).format('MMMM Do')}
                   </button>
                 )}
@@ -219,6 +174,7 @@ class App extends React.Component {
                   this.updateFormState('datePicker', updatedState);
                 }}
               />
+              .
             </div>
             <button className={`book-it ${formIsReady ? 'ready' : ''}`} type="submit">
               Book It

@@ -5,9 +5,8 @@ TODO.md
 
 ### Create react app
 # testing
+/client/src/config.js
 /client/coverage
-
-# production
 /client/build
 
 
