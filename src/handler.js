@@ -59,7 +59,10 @@ module.exports.fetch_venues = async (event, context) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify(results)
+      body: JSON.stringify(results),
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
     };
   } catch (err) {
     console.error(err.stack);
