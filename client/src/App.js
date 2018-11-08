@@ -1,11 +1,11 @@
 import React from 'react';
 import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
-// import phoneProviders from './constants/phoneProviders';
 import { API_ENDPOINT } from './config.js';
 import AutoComplete from './AutoComplete';
 import Dropdown from './Dropdown';
 import DatePickerWrapper from './DatePickerWrapper';
+import Login from './Login';
 import './App.css';
 
 class App extends React.Component {
@@ -23,15 +23,20 @@ class App extends React.Component {
   async componentDidMount() {
     // const validate = await fetch(`/validate${window.location.search}`);
     // const isAuthenticated = await validate.json();
-    const isAuthenticated = true;
+    // const isAuthenticated = true;
 
     const venueList = await this.fetchVenueList('venues');
 
     this.setState({
-      isAuthenticated,
       venueList: venueList
     });
   }
+
+  authenticate = isAuthenticated => {
+    this.setState({
+      isAuthenticated
+    });
+  };
 
   fetchVenueList = async key => {
     const response = localStorage.getItem(key);
@@ -40,7 +45,7 @@ class App extends React.Component {
       return JSON.parse(response);
     }
 
-    const data = await fetch(`${API_ENDPOINT}/fetch_venues`);
+    const data = await fetch(`${API_ENDPOINT}/fetch-venues`);
     const jsonData = await data.json();
     const venues = jsonData.Items;
 
@@ -63,7 +68,7 @@ class App extends React.Component {
 
   getInputFields = form => {
     const formData = {};
-    const inputFields = ['restaurant', 'phone', 'phoneProvider', 'guests'];
+    const inputFields = ['restaurant', 'phone', 'guests'];
 
     // assign input valules to formData object
     inputFields.forEach(name => {
@@ -176,29 +181,12 @@ class App extends React.Component {
               />
               .
             </div>
-            <button className={`book-it ${formIsReady ? 'ready' : ''}`} type="submit">
+            <button className={`button ${formIsReady ? 'ready' : ''}`} type="submit">
               Book It
             </button>
           </form>
         ) : (
-          <form onSubmit={this.handleSubmit}>
-            <label className="label" htmlFor="phone">
-              Phone
-            </label>
-            <input name="phone" id="phone" type="tel" placeholder="Phone number" />
-            <label className="label" htmlFor="phoneProvider">
-              Phone provider
-            </label>
-            <select name="phoneProvider" id="phoneProvider">
-              <option>Phone provider</option>
-              {/* {phoneProviders.sort().map((provider, key) => (
-                <option key={key}>{provider}</option>
-              ))} */}
-            </select>
-            <button className={`book-it ${formIsReady ? 'ready' : ''}`} type="submit">
-              Submit
-            </button>
-          </form>
+          <Login authenticate={this.authenticate} />
         )}
       </div>
     );

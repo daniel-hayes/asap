@@ -1,4 +1,4 @@
-service: resy-lambda
+service: book-it
 
 provider:
   name: aws
@@ -41,6 +41,11 @@ functions:
 
   fetch_venues:
     handler: src/handler.fetch_venues
+    events:
+      - http:
+          path: fetch-venues
+          method: get
+          cors: true
 
 # package:
 #   artifact: ./package.zip

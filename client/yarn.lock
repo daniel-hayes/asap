@@ -944,6 +944,14 @@ alphanum-sort@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
 
+amazon-cognito-identity-js@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/amazon-cognito-identity-js/-/amazon-cognito-identity-js-3.0.3.tgz#4095ee649648c10d725517ed82e7b53f19644814"
+  dependencies:
+    buffer "4.9.1"
+    crypto-js "^3.1.9-1"
+    js-cookie "^2.1.4"
+
 ansi-colors@^3.0.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/ansi-colors/-/ansi-colors-3.2.1.tgz#9638047e4213f3428a11944a7d4b31cba0a3ff95"
@@ -1616,7 +1624,7 @@ buffer-xor@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/buffer-xor/-/buffer-xor-1.0.3.tgz#26e61ed1422fb70dd42e6e36729ed51d855fe8d9"
 
-buffer@^4.3.0:
+buffer@4.9.1, buffer@^4.3.0:
   version "4.9.1"
   resolved "https://registry.yarnpkg.com/buffer/-/buffer-4.9.1.tgz#6d1bb601b07a4efced97094132093027c95bc298"
   dependencies:
@@ -2147,6 +2155,10 @@ crypto-browserify@^3.11.0:
     public-encrypt "^4.0.0"
     randombytes "^2.0.0"
     randomfill "^1.0.3"
+
+crypto-js@^3.1.9-1:
+  version "3.1.9-1"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.1.9-1.tgz#fda19e761fc077e01ffbfdc6e9fdfc59e8806cd8"
 
 css-color-names@0.0.4, css-color-names@^0.0.4:
   version "0.0.4"
@@ -4694,6 +4706,10 @@ joi@^11.1.1:
     hoek "4.x.x"
     isemail "3.x.x"
     topo "2.x.x"
+
+js-cookie@^2.1.4:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-2.2.0.tgz#1b2c279a6eece380a12168b92485265b35b1effb"
 
 js-levenshtein@^1.1.3:
   version "1.1.4"
