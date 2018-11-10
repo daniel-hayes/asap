@@ -5,6 +5,7 @@ import {
   CognitoUserAttribute,
   CognitoUser
 } from 'amazon-cognito-identity-js';
+import InputValidation from './InputValidation';
 import { USER_POOL } from './config.js';
 
 const MAX_PHONE_LENGTH = 10;
@@ -197,22 +198,24 @@ class Login extends React.Component {
     return (
       <form className="App-form">
         {formState === FORM_STATES.noAuth && (
-          /* put this in separate form validation component*/
           <div className="input-wrapper">
-            <label className={`input-label ${phoneIsReady ? 'valid' : ''}`} htmlFor="phoneNumber">
-              <input
-                id="phoneNumber"
-                autoComplete="off"
-                className="base-input input"
-                maxLength={MAX_PHONE_LENGTH}
-                type="tel"
-                name="phoneNumber"
-                placeholder="phone number"
-                onChange={this.handleChange}
-                value={phoneNumber}
-              />
-            </label>
-            {validationError && <span className="invalid">{validationError}</span>}
+            <InputValidation isValid={phoneIsReady} message={validationError}>
+              {({ isValid }) => (
+                <label className={`input-label ${isValid}`} htmlFor="phoneNumber">
+                  <input
+                    id="phoneNumber"
+                    autoComplete="off"
+                    className="base-input input"
+                    maxLength={MAX_PHONE_LENGTH}
+                    type="tel"
+                    name="phoneNumber"
+                    placeholder="phone number"
+                    onChange={this.handleChange}
+                    value={phoneNumber}
+                  />
+                </label>
+              )}
+            </InputValidation>
             <button
               onClick={e => {
                 e.preventDefault();
@@ -230,18 +233,21 @@ class Login extends React.Component {
 
         {formState === FORM_STATES.next && (
           <div className="input-wrapper">
-            <label className={`input-label ${passwordIsValid ? 'valid' : ''}`} htmlFor="password">
-              <input
-                className="base-input input"
-                id="password"
-                name="password"
-                type="password"
-                placeholder="password"
-                onChange={this.handleChange}
-                value={password}
-              />
-            </label>
-            {validationError && <span className="invalid">{validationError}</span>}
+            <InputValidation isValid={passwordIsValid} message={validationError}>
+              {({ isValid }) => (
+                <label className={`input-label ${isValid}`} htmlFor="password">
+                  <input
+                    className="base-input input"
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="password"
+                    onChange={this.handleChange}
+                    value={password}
+                  />
+                </label>
+              )}
+            </InputValidation>
             <div className="button-group floating">
               <button onClick={this.login} className="button ready">
                 Log In
@@ -255,23 +261,22 @@ class Login extends React.Component {
 
         {formState === FORM_STATES.confirm && (
           <div className="input-wrapper">
-            <label
-              className={`input-label ${verificationIsValid ? 'valid' : ''}`}
-              htmlFor="verification"
-            >
-              <input
-                className="base-input input"
-                id="verification"
-                name="verification"
-                type="num"
-                maxLength="6"
-                placeholder="verification code"
-                onChange={this.handleChange}
-                value={verification}
-              />
-            </label>
-            {validationError && <span className="invalid">{validationError}</span>}
-
+            <InputValidation isValid={passwordIsValid} message={validationError}>
+              {({ isValid }) => (
+                <label className={`input-label ${isValid}`} htmlFor="verification">
+                  <input
+                    className="base-input input"
+                    id="verification"
+                    name="verification"
+                    type="num"
+                    maxLength="6"
+                    placeholder="verification code"
+                    onChange={this.handleChange}
+                    value={verification}
+                  />
+                </label>
+              )}
+            </InputValidation>
             <button onClick={this.verifyUser} className="button floating ready">
               Verify
             </button>
