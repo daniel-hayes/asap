@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "amazon-cognito-identity-js": "^3.0.3",
     "moment": "^2.22.2",
     "react": "^16.6.0",
     "react-datepicker": "^1.8.0",
