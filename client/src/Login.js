@@ -224,7 +224,7 @@ class Login extends React.Component {
                   this.setState({ formState: FORM_STATES.next });
                 }
               }}
-              className={`button floating ${phoneIsReady ? 'ready' : ''}`}
+              className={`button ${phoneIsReady ? 'ready' : ''}`}
             >
               Next
             </button>
@@ -248,7 +248,7 @@ class Login extends React.Component {
                 </label>
               )}
             </InputValidation>
-            <div className="button-group floating">
+            <div className="button-group">
               <button onClick={this.login} className="button ready">
                 Log In
               </button>
@@ -261,7 +261,7 @@ class Login extends React.Component {
 
         {formState === FORM_STATES.confirm && (
           <div className="input-wrapper">
-            <InputValidation isValid={passwordIsValid} message={validationError}>
+            <InputValidation isValid={verificationIsValid} message={validationError}>
               {({ isValid }) => (
                 <label className={`input-label ${isValid}`} htmlFor="verification">
                   <input
@@ -277,7 +277,7 @@ class Login extends React.Component {
                 </label>
               )}
             </InputValidation>
-            <button onClick={this.verifyUser} className="button floating ready">
+            <button onClick={this.verifyUser} className="button ready">
               Verify
             </button>
           </div>

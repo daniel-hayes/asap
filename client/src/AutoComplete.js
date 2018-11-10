@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DEFAULT_INPUT_WIDTH = 67;
+const DEFAULT_INPUT_WIDTH = 92;
 
 class AutoComplete extends React.Component {
   state = {
@@ -99,24 +99,23 @@ class AutoComplete extends React.Component {
 
         <span id="hiddenText">{inputValue}</span>
 
-        {autoComplete.length > 0 &&
-          !selected[searchKey] && (
-            // @TODO flip these class names
-            <div className="AutoComplete-list">
-              <ul className="AutoComplete-list_wrapper">
-                {autoComplete.map((item, key) => (
-                  <li
-                    className="AutoComplete-list_item"
-                    key={key}
-                    value={key}
-                    onClick={this.handleClick}
-                  >
-                    {item[searchKey]}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+        {autoComplete.length > 0 && !selected[searchKey] && (
+          // @TODO flip these class names
+          <div className="AutoComplete-list">
+            <ul className="AutoComplete-list_wrapper">
+              {autoComplete.map((item, key) => (
+                <li
+                  className="AutoComplete-list_item"
+                  key={key}
+                  value={key}
+                  onClick={this.handleClick}
+                >
+                  {item[searchKey]}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     );
   }

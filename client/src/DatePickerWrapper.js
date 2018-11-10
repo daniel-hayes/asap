@@ -37,6 +37,7 @@ class DatePickerWrapper extends React.Component {
           selected={date}
           onChange={this.handleChange}
         />
+        .
       </div>
     );
   }

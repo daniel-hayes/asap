@@ -141,7 +141,7 @@ class App extends React.Component {
             <div>
               I want a reservation at
               <AutoComplete
-                inputClassName="input no-padding--right"
+                inputClassName="input embedded-input no-padding--right"
                 searchKey="venue"
                 placeholder="Lilia"
                 searchItems={venueList}
@@ -159,7 +159,10 @@ class App extends React.Component {
                 }}
               >
                 {({ handleClick, selection }) => (
-                  <button onClick={handleClick} className={`input ${selection ? 'has-value' : ''}`}>
+                  <button
+                    onClick={handleClick}
+                    className={`input embedded-input ${selection ? 'has-value' : ''}`}
+                  >
                     {selection || 2}
                   </button>
                 )}
@@ -170,7 +173,9 @@ class App extends React.Component {
                 DateInput={({ onClick, hasValue, value }) => (
                   <button
                     onClick={onClick}
-                    className={`input no-padding--right ${hasValue ? 'has-value' : ''}`}
+                    className={`input embedded-input no-padding--right ${
+                      hasValue ? 'has-value' : ''
+                    }`}
                   >
                     {moment(value).format('MMMM Do')}
                   </button>
@@ -179,9 +184,11 @@ class App extends React.Component {
                   this.updateFormState('datePicker', updatedState);
                 }}
               />
-              .
             </div>
-            <button className={`button ${formIsReady ? 'ready' : ''}`} type="submit">
+            <button
+              className={`button button--with-border ${formIsReady ? 'ready' : ''}`}
+              type="submit"
+            >
               Submit
             </button>
           </form>
