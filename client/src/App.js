@@ -182,7 +182,7 @@ class App extends React.Component {
               .
             </div>
             <button className={`button ${formIsReady ? 'ready' : ''}`} type="submit">
-              Book It
+              Submit
             </button>
           </form>
         ) : (

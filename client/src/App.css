@@ -43,8 +43,7 @@
 .base-input {
   letter-spacing: 1px;
   color: #fff;
-  text-align: center;
-  border-bottom: 1px solid #ff8686;
+  border-bottom: 3px solid #ff8686;
   padding-bottom: 10px;
 }
 
@@ -162,7 +161,7 @@
   font-family: inherit;
   font-size: 14px;
   box-shadow: 4px 6px 6px #0000000a;
-  margin-top: 25px;
+  margin-top: 20px;
 }
 
 .button:hover {
