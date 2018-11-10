@@ -1,4 +1,10 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+/* @import url('https://fonts.googleapis.com/css?family=Open+Sans'); */
+/* @import url('https://fonts.googleapis.com/css?family=Roboto'); */
+
+/* @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed'); */
+/* @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro'); */
+/* @import url('https://fonts.googleapis.com/css?family=Asap|Roboto+Slab'); */
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans');
 
 * {
   box-sizing: border-box;
@@ -6,7 +12,13 @@
 
 html,
 body {
-  font-family: 'Open Sans', sans-serif;
+  /* font-family: 'Open Sans', sans-serif; */
+  /* font-family: 'Source Sans Pro', sans-serif; */
+  /* font-family: 'Roboto Condensed', sans-serif; */
+  /* font-family: 'Roboto Slab', serif; */
+  /* font-family: 'Asap', sans-serif; */
+  font-family: 'Noto Sans', sans-serif;
+
   font-size: 12px;
 }
 

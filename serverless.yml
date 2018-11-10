@@ -1,4 +1,4 @@
-service: book-it
+service: asap
 
 provider:
   name: aws
