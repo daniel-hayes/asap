@@ -19,9 +19,41 @@
   top: -44px;
 }
 
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  max-width: 400px;
+}
+
+.input-label {
+  position: relative;
+}
+
+.input-label::after {
+  transition: width 500ms ease-out;
+  background: #fff;
+  width: 0;
+  height: 3px; /* @TODO make this a var so it matches the border height of input */
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(100% - 3px); /* @TODO make this a var so it matches the border height of input */
+}
+
+.input-label.valid::after {
+  width: 100%;
+}
+
+.invalid {
+  text-align: left;
+  font-size: 14px;
+  margin-top: 15px;
+}
+
 .input {
   box-sizing: content-box;
-  padding: 0 6px;
+  /* padding: 0 6px; */
   white-space: nowrap;
   background: none;
   color: #ff8686;
@@ -45,6 +77,8 @@
   color: #fff;
   border-bottom: 3px solid #ff8686;
   padding-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .base-input::placeholder {
