@@ -9,10 +9,18 @@ import { USER_POOL } from './config.js';
 
 const MAX_PHONE_LENGTH = 10;
 const isLikelyPhoneNumberRegEx = RegExp(/^\d{10}$/);
+const FORM_STATES = {
+  noAuth: 'NO_AUTH',
+  next: 'NEXT',
+  confirm: 'CONFIRM'
+};
 
 class Login extends React.Component {
   state = {
     phoneNumber: '',
+    password: '',
+    verification: '',
+    formState: FORM_STATES.noAuth,
     validationErrors: []
   };
 
@@ -27,7 +35,7 @@ class Login extends React.Component {
     const cognitoUser = userPool.getCurrentUser();
 
     if (cognitoUser !== null) {
-      cognitoUser.getSession(function(err, session) {
+      cognitoUser.getSession((err, session) => {
         if (err) {
           console.log(err);
           return;
@@ -44,60 +52,66 @@ class Login extends React.Component {
     this.isAuthenticated();
   }
 
+  // @TODO Refactor this function
   handleChange = e => {
-    const inputValue = e.currentTarget.value;
+    const { name, value } = e.currentTarget;
 
-    if (!isLikelyPhoneNumberRegEx.test(inputValue) && inputValue.length === MAX_PHONE_LENGTH) {
-      // do some validation
-      console.log('not a number');
-      return;
+    if (name === 'phone') {
+      if (!isLikelyPhoneNumberRegEx.test(value) && value.length === MAX_PHONE_LENGTH) {
+        // do some validation
+        console.log('not a number');
+        return;
+      }
+
+      return this.setState({ phoneNumber: value });
     }
 
-    this.setState({ phoneNumber: inputValue });
+    if (name === 'password') {
+      return this.setState({ password: value });
+    }
+
+    if (name === 'verification') {
+      return this.setState({ verification: value });
+    }
   };
 
   login = e => {
     e.preventDefault();
     const { authenticate } = this.props;
+    const { phoneNumber, password } = this.state;
+    const fullNumber = `+1${phoneNumber}`;
 
     const authenticationDetails = new AuthenticationDetails({
-      Username: '+14136875432',
-      Password: 'password'
+      Username: fullNumber,
+      Password: password
     });
 
     const cognitoUser = new CognitoUser({
-      Username: '+14136875432',
+      Username: fullNumber,
       Pool: new CognitoUserPool({
         UserPoolId: USER_POOL.poolId,
         ClientId: USER_POOL.clientId
       })
     });
 
-    // cognitoUser.confirmRegistration('573142', true, function(err, result) {
-    //   if (err) {
-    //     console.log(err);
-    //     return;
-    //   }
-    //   console.log(result);
-    // });
-
     cognitoUser.authenticateUser(authenticationDetails, {
-      onSuccess: function(result) {
+      onSuccess: result => {
         const accessToken = result.getAccessToken().getJwtToken();
-
-        /* Use the idToken for Logins Map when Federating User Pools with identity pools or when passing through an Authorization Header to an API Gateway Authorizer*/
         const idToken = result.idToken.jwtToken;
         console.log(result, accessToken, idToken);
         authenticate(true);
       },
 
-      onFailure: function(err) {
+      onFailure: err => {
         console.log(err);
       }
     });
   };
 
   createUser = e => {
+    const { phoneNumber, password } = this.state;
+    const fullNumber = `+1${phoneNumber}`;
+
     e.preventDefault();
 
     const userPool = new CognitoUserPool({
@@ -105,57 +119,111 @@ class Login extends React.Component {
       ClientId: USER_POOL.clientId
     });
 
-    var phoneNumber = new CognitoUserAttribute({
+    var phoneAttribute = new CognitoUserAttribute({
       Name: 'phone_number',
-      Value: '+14136875432'
+      Value: fullNumber
     });
 
-    userPool.signUp('+14136875432', 'password', [phoneNumber], null, (err, result) => {
+    userPool.signUp(fullNumber, password, [phoneAttribute], null, (err, result) => {
       if (err) {
-        // handle validation
+        console.log(err);
+        return;
+      }
+
+      console.log('user name is ' + result.user.getUsername());
+
+      this.setState({
+        formState: FORM_STATES.confirm
+      });
+    });
+  };
+
+  verifyUser = e => {
+    e.preventDefault();
+    const { authenticate } = this.props;
+    const { phoneNumber, verification } = this.state;
+    const fullNumber = `+1${phoneNumber}`;
+
+    const cognitoUser = new CognitoUser({
+      Username: fullNumber,
+      Pool: new CognitoUserPool({
+        UserPoolId: USER_POOL.poolId,
+        ClientId: USER_POOL.clientId
+      })
+    });
+
+    cognitoUser.confirmRegistration(verification, true, (err, result) => {
+      if (err) {
         console.log(err);
         return;
       }
 
       console.log(result);
-      console.log('user name is ' + result.user.getUsername());
+
+      authenticate(true);
     });
   };
 
   render() {
-    const { phoneNumber, validationErrors, isLoading, venueList } = this.state;
+    const { formState, phoneNumber, validationErrors, password, verification } = this.state;
     const phoneIsReady = phoneNumber.length === MAX_PHONE_LENGTH && validationErrors.length === 0;
 
     return (
-      <form className="App-form" onSubmit={this.handleSubmit}>
-        <input
-          autoComplete="off"
-          className="base-input input"
-          name="phone"
-          maxLength={MAX_PHONE_LENGTH}
-          type="tel"
-          placeholder="xxx xxx xxxx"
-          onChange={this.handleChange}
-          value={phoneNumber}
-        />
-
-        <div className="button-group floating">
-          <button onClick={this.login} className={`button ${phoneIsReady ? 'ready' : ''}`}>
-            Log In
+      <form className="App-form">
+        {formState === FORM_STATES.noAuth && [
+          <input
+            autoComplete="off"
+            className="base-input input"
+            maxLength={MAX_PHONE_LENGTH}
+            type="tel"
+            name="phone"
+            placeholder="phone number"
+            onChange={this.handleChange}
+            value={phoneNumber}
+          />,
+          <button
+            onClick={() => {
+              this.setState({ formState: FORM_STATES.next });
+            }}
+            className={`button ${phoneIsReady ? 'ready' : ''}`}
+          >
+            Next
           </button>
-          <button onClick={this.createUser} className={`button ${phoneIsReady ? 'ready' : ''}`}>
-            Create Account
+        ]}
+
+        {formState === FORM_STATES.next && [
+          <input
+            className="base-input input"
+            name="password"
+            type="password"
+            placeholder="password"
+            onChange={this.handleChange}
+            value={password}
+          />,
+          <div className="button-group floating">
+            <button onClick={this.login} className="button ready">
+              Log In
+            </button>
+            <button onClick={this.createUser} className="button ready">
+              Create Account
+            </button>
+          </div>
+        ]}
+
+        {formState === FORM_STATES.confirm && [
+          <input
+            className="base-input input"
+            name="verification"
+            type="num"
+            maxLength="6"
+            placeholder="verification code"
+            onChange={this.handleChange}
+            value={verification}
+          />,
+          <button onClick={this.verifyUser} className="button ready">
+            Verify
           </button>
-        </div>
-
-        {/* <button className="button ready">Next</button> */}
-
-        {/* <input
-          className="base-input input"
-          name="password"
-          type="password"
-          placeholder="password"
-        /> */}
+        ]}
       </form>
     );
   }
